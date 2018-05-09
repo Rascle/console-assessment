@@ -25,7 +25,19 @@ exports.excludeByProperty = (ignoreWithKey, objectsArray) => {
 		return !obj.hasOwnProperty(ignoreWithKey)
 	})
 };
-exports.sumDeep = () => {};
+exports.sumDeep = (objectsArray) => {
+	function getNestedValueSums (array) {
+		return array.reduce((acc, obj) => {
+			return Number.isInteger(obj.val) ? (acc + obj.val) : acc
+		}, 0)
+	}
+
+	return objectsArray.map(obj => {
+		return {
+			objects: getNestedValueSums(obj.objects)
+		}
+	})
+};
 exports.applyStatusColor = () => {};
 exports.createGreeting = () => {};
 exports.setDefaults = () => {};
