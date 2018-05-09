@@ -56,7 +56,14 @@ exports.createGreeting = (greeterFunc, greeting) => {
 		return greeterFunc(greeting, name)
 	}
 };
-exports.setDefaults = () => {};
+exports.setDefaults = (defaults) => {
+	return (user) => {
+		return Object.keys(defaults).reduce((updatedUser, property) => {
+			user[property] = user.hasOwnProperty(property) ? user[property] : defaults[property]
+			return updatedUser
+		}, user)
+	}
+};
 
 exports.sanitizeUser = () => {
     var foundUsersFirstname;
