@@ -26,7 +26,7 @@ exports.excludeByProperty = (ignoreWithKey, objectsArray) => {
 	})
 };
 exports.sumDeep = (objectsArray) => {
-	function getNestedValueSums (array) {
+	function getNestedValueSums(array) {
 		return array.reduce((acc, obj) => {
 			return Number.isInteger(obj.val) ? (acc + obj.val) : acc
 		}, 0)
@@ -39,7 +39,7 @@ exports.sumDeep = (objectsArray) => {
 	})
 };
 exports.applyStatusColor = (colorMap, statuses) => {
-	function getStatusColor (status) {
+	function getStatusColor(status) {
 		return Object.keys(colorMap).find(color => 
 			colorMap[color].indexOf(status) >= 0
 		)
@@ -65,36 +65,36 @@ exports.setDefaults = (defaults) => {
 	}
 };
 
-exports.sanitizeUser = () => {
-    var foundUsersFirstname;
-
+exports.sanitizeUser = (user) => {
     // Create a helper that converts the users name to an array
-    function getNameArray() {
-        return user.name.split('');
+    function getFirstName(name) {
+        return name ? name.toString().split(' ')[0] : ''
     }
 
-    // Ensure a user has an `fullAddress` property by combining `address.streetNum, address.streetName, address.suburb`
-    if (user.address.num && user.address.street && user.address.suburb) {
-        user.fullAddress = user.address.num + ' ' + user.address.street + ', ' + user.address.suburb;
-    }
+	// Ensure a user has an `fullAddress` property by combining `address.streetNum, address.streetName, address.suburb`
+	function getFullAddress(address) {
+		if (!address) return ''
+
+		const addressProperties = ['num', 'street', 'suburb']
+
+		const fullAddress = addressProperties.reduce((addressArray, property) => {
+			address[property] && addressArray.push(`${address[property]}${property === 'street' ? ',' : ''}`)
+			return addressArray
+		}, [])
+		return fullAddress.length ? fullAddress.join(' ') : ''
+	}
+
+	function offsetMonth(month) {
+		return Number.isInteger(+month) && 0 <= month < 12 ? month + 1 : -1
+	}
+
+	user.fullAddress = user.fullAddress || getFullAddress(user.address)
 
     // The given user always returns the `monthJoined` as 0 to 11. We need it to be 1 to 12 so add 1.
-    user.monthJoined = user.monthJoined + 1;
+    user.monthJoined = offsetMonth(user.monthJoined);
 
     // The users name is their full name. We want easy access to the first name.
-    for (i = 0; i < getNameArray().length; i++) {
-
-        // Make sure `firstName` exists and is a String
-        if (!user.firstName) user.firstName = '';
-
-        // We can detect the first name by assuming it is separated with a space. So check if the current character is a space.
-        if (!foundUsersFirstname) foundUsersFirstname = getNameArray()[i] != ' ' ? false : true;
-
-        // If we haven't found the first name yet, append the next character
-        if (getNameArray()[i] && !foundUsersFirstname) {
-            user.firstName = user.firstName + getNameArray()[i];
-        }
-    }
+    user.firstName = getFirstName(user.name)
 
     return user;
 };
