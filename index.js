@@ -7,35 +7,34 @@ exports.example = () => {
     return 'hello world';
 };
 
-exports.stripPrivateProperties = (privateProperties, objectsArray) => {
-    return objectsArray.map(obj => {
-        let strippedObj = {}
-        for (const key in obj) {
-            if (privateProperties.indexOf(key) < 0) {
-				strippedObj[key] = obj[key]
-			}
-        }
-        return strippedObj
+exports.stripPrivateProperties = (privateProperties, users) => {
+    return users.map(user => {
+        return privateProperties.reduce((cleanedUser, property) => {
+			delete cleanedUser[property]
+			return cleanedUser
+		}, {...user})
     })
 };
 
-exports.excludeByProperty = (ignoreWithKey, objectsArray) => {
+exports.excludeByProperty = (exclusionProperty, objectsArray) => {
 	return objectsArray.filter(obj => {
-		//This will filter out objects with the specified key, even if they value at that location is falsy
-		return !obj.hasOwnProperty(ignoreWithKey)
+		//This will filter out objects with the specified key, even if the value at that location is falsy
+		//I opted for this solution because the specs ask for the existence of a property, not the values truthiness
+		return !obj.hasOwnProperty(exclusionProperty)
 	})
 };
 exports.sumDeep = (objectsArray) => {
-	function getNestedValueSums(array) {
+	function getValueArraySums(array) {
 		return array.reduce((acc, obj) => {
 			return Number.isInteger(obj.val) ? (acc + obj.val) : acc
 		}, 0)
 	}
 
 	return objectsArray.map(obj => {
-		return {
-			objects: getNestedValueSums(obj.objects)
-		}
+		return Object.keys(obj).reduce((objSums, property) => {
+			objSums[property] = getValueArraySums(obj.objects)
+			return objSums
+		}, {})
 	})
 };
 exports.applyStatusColor = (colorMap, statuses) => {
