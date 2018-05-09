@@ -51,7 +51,11 @@ exports.applyStatusColor = (colorMap, statuses) => {
 		return updatedStatuses
 	}, [])
 };
-exports.createGreeting = () => {};
+exports.createGreeting = (greeterFunc, greeting) => {
+	return (name) => {
+		return greeterFunc(greeting, name)
+	}
+};
 exports.setDefaults = () => {};
 
 exports.sanitizeUser = () => {
