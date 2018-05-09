@@ -21,7 +21,7 @@ exports.stripPrivateProperties = (privateProperties, objectsArray) => {
 
 exports.excludeByProperty = (ignoreWithKey, objectsArray) => {
 	return objectsArray.filter(obj => {
-		//This will return objects with the specified key even if they value at that location is truthy
+		//This will filter out objects with the specified key, even if they value at that location is falsy
 		return !obj.hasOwnProperty(ignoreWithKey)
 	})
 };
