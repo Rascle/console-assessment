@@ -38,7 +38,19 @@ exports.sumDeep = (objectsArray) => {
 		}
 	})
 };
-exports.applyStatusColor = () => {};
+exports.applyStatusColor = (colorMap, statuses) => {
+	function getStatusColor (status) {
+		return Object.keys(colorMap).find(color => 
+			colorMap[color].indexOf(status) >= 0
+		)
+	}
+
+	return statuses.reduce((updatedStatuses, statusObj) => {
+		statusObj.color = getStatusColor(statusObj.status)
+		statusObj.color && updatedStatuses.push(statusObj)
+		return updatedStatuses
+	}, [])
+};
 exports.createGreeting = () => {};
 exports.setDefaults = () => {};
 
