@@ -19,7 +19,12 @@ exports.stripPrivateProperties = (privateProperties, objectsArray) => {
     })
 };
 
-exports.excludeByProperty = () => {};
+exports.excludeByProperty = (ignoreWithKey, objectsArray) => {
+	return objectsArray.filter(obj => {
+		//This will return objects with the specified key even if they value at that location is truthy
+		return !obj.hasOwnProperty(ignoreWithKey)
+	})
+};
 exports.sumDeep = () => {};
 exports.applyStatusColor = () => {};
 exports.createGreeting = () => {};
