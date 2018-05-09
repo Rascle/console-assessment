@@ -7,7 +7,18 @@ exports.example = () => {
     return 'hello world';
 };
 
-exports.stripPrivateProperties = () => {};
+exports.stripPrivateProperties = (privateProperties, objectsArray) => {
+    return objectsArray.map(obj => {
+        let strippedObj = {}
+        for (const key in obj) {
+            if (privateProperties.indexOf(key) < 0) {
+				strippedObj[key] = obj[key]
+			}
+        }
+        return strippedObj
+    })
+};
+
 exports.excludeByProperty = () => {};
 exports.sumDeep = () => {};
 exports.applyStatusColor = () => {};
