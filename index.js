@@ -12,7 +12,7 @@ exports.stripPrivateProperties = (privateProperties, users) => {
         privateProperties.reduce((cleanedUser, property) => {
 			delete cleanedUser[property]
 			return cleanedUser
-		}, {...user})
+		}, user)
     )
 };
 
